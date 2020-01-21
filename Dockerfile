@@ -15,11 +15,6 @@ RUN set -x \
 	&& mkdir /opt/mycroft/skills \
 	# git fetch && git checkout dev && \ this branch is now merged to master
 	&& CI=true /opt/mycroft/./dev_setup.sh --allow-root -sm \
-	&& mkdir /opt/mycroft/scripts/logs \
-	&& touch /opt/mycroft/scripts/logs/mycroft-bus.log \
-	&& touch /opt/mycroft/scripts/logs/mycroft-voice.log \
-	&& touch /opt/mycroft/scripts/logs/mycroft-skills.log \
-	&& touch /opt/mycroft/scripts/logs/mycroft-audio.log \
 	&& apt-get -y autoremove \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
