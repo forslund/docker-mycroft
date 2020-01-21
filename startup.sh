@@ -1,5 +1,5 @@
 #!/bin/bash
-source /opt/mycroft/.venv/bin/activate
-/opt/mycroft/./start-mycroft.sh all
+source /opt/mycroft-core/.venv/bin/activate
+/opt/mycroft-core/./start-mycroft.sh all
 
 tail -f /var/log/mycroft/*.log

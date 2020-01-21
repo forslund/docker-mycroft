@@ -3,6 +3,7 @@ FROM ubuntu:18.04
 ENV TERM linux
 ENV DEBIAN_FRONTEND noninteractive
 
+RUN mkdir /opt/mycroft
 # Install Server Dependencies for Mycroft
 RUN set -x \
 	&& sed -i 's/# \(.*multiverse$\)/\1/g' /etc/apt/sources.list \
@@ -10,11 +11,11 @@ RUN set -x \
 	&& apt-get -y install git python3 python3-pip locales sudo \
 	&& pip3 install future msm \
 	# Checkout Mycroft
-	&& git clone https://github.com/MycroftAI/mycroft-core.git /opt/mycroft \
-	&& cd /opt/mycroft \
+	&& git clone https://github.com/MycroftAI/mycroft-core.git /opt/mycroft-core \
+	&& cd /opt/mycroft-core \
 	&& mkdir /opt/mycroft/skills \
 	# git fetch && git checkout dev && \ this branch is now merged to master
-	&& CI=true /opt/mycroft/./dev_setup.sh --allow-root -sm \
+	&& CI=true /opt/mycroft-core/dev_setup.sh --allow-root -sm \
 	&& apt-get -y autoremove \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -29,16 +30,15 @@ ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
-WORKDIR /opt/mycroft
-COPY startup.sh /opt/mycroft
+WORKDIR /opt/mycroft-core
+COPY startup.sh /opt/mycroft-core
 ENV PYTHONPATH $PYTHONPATH:/mycroft/ai
 
 RUN echo "PATH=$PATH:/opt/mycroft/bin" >> $HOME/.bashrc \
         && echo "source /opt/mycroft/.venv/bin/activate" >> $HOME/.bashrc
 
-RUN chmod +x /opt/mycroft/start-mycroft.sh \
-	&& chmod +x /opt/mycroft/startup.sh
-
+RUN chmod +x /opt/mycroft-core/start-mycroft.sh \
+	&& chmod +x /opt/mycroft-core/startup.sh
 EXPOSE 8181
 
-ENTRYPOINT "/opt/mycroft/startup.sh"
+ENTRYPOINT "/opt/mycroft-core/startup.sh"
