@@ -11,8 +11,9 @@ RUN set -x \
 	&& apt-get -y install git python3 python3-pip locales sudo \
 	&& pip3 install future msm \
 	# Checkout Mycroft
-	&& git clone https://github.com/MycroftAI/mycroft-core.git /opt/mycroft-core \
+	&& git clone https://github.com/forslund/mycroft-core.git /opt/mycroft-core \
 	&& cd /opt/mycroft-core \
+        && git checkout testing/behave \
 	&& mkdir /opt/mycroft/skills \
 	# git fetch && git checkout dev && \ this branch is now merged to master
 	&& CI=true /opt/mycroft-core/dev_setup.sh --allow-root -sm \
@@ -34,6 +35,9 @@ WORKDIR /opt/mycroft-core
 COPY startup.sh /opt/mycroft-core
 ENV PYTHONPATH $PYTHONPATH:/mycroft/ai
 
+RUN mkdir ~/.mycroft
+RUN ./bin/mycroft-msm default
+RUN touch /opt/mycroft/skills/.msm
 RUN echo "PATH=$PATH:/opt/mycroft/bin" >> $HOME/.bashrc \
         && echo "source /opt/mycroft/.venv/bin/activate" >> $HOME/.bashrc
 
